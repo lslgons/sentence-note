@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+import pandas as pd
 # DB 연결 및 테이블 생성
 def init_db():
     conn = sqlite3.connect('english_learning.db')
@@ -106,3 +107,16 @@ def get_word(word: str):
     conn.close()
     return word
 
+def export_sentences_from_sqlite():
+    conn = sqlite3.connect('english_learning.db')
+    query = "SELECT * FROM sentences"  # 원하는 테이블을 선택
+    df = pd.read_sql(query, conn)
+    conn.close()
+    return df.to_csv(index=False)
+
+def export_words_from_sqlite():
+    conn = sqlite3.connect('english_learning.db')
+    query = "SELECT * FROM words"  # 원하는 테이블을 선택
+    df = pd.read_sql(query, conn)
+    conn.close()
+    return df.to_csv(index=False)

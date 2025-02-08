@@ -1,8 +1,8 @@
 import streamlit as st
 import random
 import pandas as pd
-
 from data import *
+# from data_mongodb import *
 
 
 
@@ -123,7 +123,7 @@ if 'add_word_english_input' not in st.session_state:
 def add_word_action():
     print("add_word_action")
     if st.session_state.add_word_korean_input and st.session_state.add_word_english_input:
-        add_word(st.session_state.add_word_korean_input, st.session_state.add_word_english_input)
+        add_word(st.session_state.add_word_english_input, st.session_state.add_word_korean_input)
         # st.success("문장이 등록되었습니다!")
         st.session_state.after_add_word_status = "단어가 등록되었습니다."
         st.session_state.add_word_korean_input = ''
@@ -144,7 +144,7 @@ def add_sentence_action():
 
 with menu_tabs[4]:
     st.header("⚙️ 문장/단어 관리")
-    mgmt_tabs=st.tabs(["문장 관리", "단어 관리"])
+    mgmt_tabs=st.tabs(["문장 관리", "단어 관리", "Export/Import"])
 
     with mgmt_tabs[0]:
         st.subheader("패턴 관리")
@@ -218,3 +218,18 @@ with menu_tabs[4]:
                 st.rerun()
         else:
             st.write("등록된 단어가 없습니다.")
+    with mgmt_tabs[2]:
+        # 다운로드 버튼 생성
+        st.download_button(
+            label="패턴문장 CSV로 다운로드",
+            data=export_sentences_from_sqlite(),
+            file_name=f'sentences_{datetime.today().strftime("%Y%m%d")}.csv',
+            mime='text/csv'
+        )
+
+        st.download_button(
+            label="단어 CSV로 다운로드",
+            data=export_words_from_sqlite(),
+            file_name=f'words_{datetime.today().strftime("%Y%m%d")}.csv',
+            mime='text/csv'
+        )
