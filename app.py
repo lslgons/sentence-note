@@ -71,10 +71,10 @@ def random_word_quiz():
 
 
 
-st.set_page_config(page_title="패턴문장/단어 암기장", layout="wide")
+st.set_page_config(page_title="🗒️ 영어노트", layout="wide")
 
 init_db()
-
+st.title("🗒️ 영어노트")
 # 탭형 메뉴
 menu_tabs = st.tabs(["문장노트", "단어노트", "패턴퀴즈", "단어퀴즈", "⚙️관리"])
 
