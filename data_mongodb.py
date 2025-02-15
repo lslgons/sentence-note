@@ -2,12 +2,12 @@ from pymongo import MongoClient
 from datetime import datetime
 from pymongo.server_api import ServerApi
 import os
+MONGO_URI="mongodb+srv://superiorgon:Im0FatwK52VzLW8q@cluster0.m81lk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 # DB 연결 및 컬렉션 생성
 def init_db():
-    uri = "mongodb+srv://superiorgon:Im0FatwK52VzLW8q@cluster0.m81lk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     MONGO_DB_URI=os.environ.get("MONGO_DB_URI")
     # Create a new client and connect to the server
-    client = MongoClient(uri, server_api=ServerApi('1'))
+    client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 
     # Send a ping to confirm a successful connection
     try:
@@ -25,7 +25,7 @@ def init_db():
 # 문장 등록 함수
 def add_sentence(korean, english):
     print("add sentence: ", english)
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     sentences = db['sentences']
     try:
@@ -41,7 +41,7 @@ def add_sentence(korean, english):
 
 # 문장 수정 함수
 def update_sentence(sentence_id, korean, english):
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     sentences = db['sentences']
     sentences.update_one(
@@ -55,7 +55,7 @@ def update_sentence(sentence_id, korean, english):
 
 # 문장 삭제 함수
 def delete_sentence(sentence_id):
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     sentences = db['sentences']
     sentences.delete_one({'_id': sentence_id})
@@ -63,7 +63,7 @@ def delete_sentence(sentence_id):
 
 # 문장 조회 함수
 def get_sentences():
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     sentences = db['sentences']
     result = list(sentences.find())
@@ -77,7 +77,7 @@ def add_word(word, meaning):
     if word_check:
         print("already exists: ", word_check)
         return
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     words = db['words']
     try:
@@ -93,7 +93,7 @@ def add_word(word, meaning):
 
 # 단어 수정 함수
 def update_word(word_id, word, meaning):
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     words = db['words']
     words.update_one(
@@ -107,7 +107,7 @@ def update_word(word_id, word, meaning):
 
 # 단어 삭제 함수
 def delete_word(word_id):
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     words = db['words']
     words.delete_one({'_id': word_id})
@@ -115,7 +115,7 @@ def delete_word(word_id):
 
 # 단어 조회 함수
 def get_words():
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     words = db['words']
     result = list(words.find())
@@ -123,7 +123,7 @@ def get_words():
     return result
 
 def get_word(word: str):
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(MONGO_URI, 27017)
     db = client['english_learning']
     words = db['words']
     result = words.find_one({'word': word})

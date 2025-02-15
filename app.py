@@ -1,13 +1,8 @@
 import streamlit as st
 import random
 import pandas as pd
-from data import *
-# from data_mongodb import *
-
-
-
-
-
+# from data import *
+from data_mongodb3 import *
 
 
 # 문장 랜덤 퀴즈 함수
@@ -52,6 +47,7 @@ def random_word_quiz():
         st.warning("등록된 단어가 없습니다. 단어를 먼저 등록해주세요.")
         return
 
+    print(words)
     if 'word_quiz' not in st.session_state:
         st.session_state.word_quiz = random.choice(words)
     if 'word_input' not in st.session_state:
@@ -59,7 +55,6 @@ def random_word_quiz():
     quiz = st.session_state.word_quiz
     word = quiz[1]
     correct_meaning = quiz[2]
-
     st.write(f"영단어: {word}")
     st.text_input("뜻을 입력하세요:", key="word_input")
 
@@ -73,7 +68,6 @@ def random_word_quiz():
         """)
     st.button("다시하기", key='word_retry', on_click=random_word_quiz_reset)
 
-# 앱 실행
 init_db()
 
 # 탭형 메뉴
@@ -159,15 +153,14 @@ with menu_tabs[4]:
         if sentences:
             df_sentences = pd.DataFrame(sentences, columns=['ID', '한국어 문장', '영문장', '등록일'])
 
-            selected_sentence = st.selectbox("수정하거나 삭제할 문장을 선택하세요",
-                                             df_sentences['ID'].astype(str) + ' - ' + df_sentences['한국어 문장'])
-
-            selected_id = int(selected_sentence.split(' - ')[0])
-            selected_data = df_sentences[df_sentences['ID'] == selected_id].iloc[0]
-
+            selected_sentence = st.selectbox("수정하거나 삭제할 문장을 선택하세요", df_sentences['한국어 문장'])
+            selected_data = df_sentences[df_sentences['한국어 문장'] == selected_sentence].iloc[0]
+            print("====== selected ======")
+            print(selected_data)
+            print("======================")
             new_korean = st.text_input("수정할 한국어 문장", selected_data['한국어 문장'])
             new_english = st.text_input("수정할 영문장", selected_data['영문장'])
-
+            selected_id = selected_data["ID"]
             if st.button("문장 수정"):
                 if new_korean and new_english:
                     update_sentence(selected_id, new_korean, new_english)
@@ -197,14 +190,15 @@ with menu_tabs[4]:
         words = get_words()
         if words:
             df_words = pd.DataFrame(words, columns=['ID', '영단어', '뜻', '등록일'])
-            selected_word = st.selectbox("수정하거나 삭제할 단어를 선택하세요", df_words['ID'].astype(str) + ' - ' + df_words['영단어'])
-
-            selected_id = int(selected_word.split(' - ')[0])
-            selected_data = df_words[df_words['ID'] == selected_id].iloc[0]
-
+            selected_word = st.selectbox("수정하거나 삭제할 단어를 선택하세요", df_words['영단어'])
+            selected_data = df_words[df_words['영단어'] == selected_word].iloc[0]
+            print("====== selected ======")
+            print(selected_data)
+            print("======================")
             new_word = st.text_input("수정할 영단어", selected_data['영단어'])
             new_meaning = st.text_input("수정할 뜻", selected_data['뜻'])
-
+            selected_id=selected_data["ID"]
+            print(selected_id)
             if st.button("단어 수정"):
                 if new_word and new_meaning:
                     update_word(selected_id, new_word, new_meaning)
@@ -222,14 +216,24 @@ with menu_tabs[4]:
         # 다운로드 버튼 생성
         st.download_button(
             label="패턴문장 CSV로 다운로드",
-            data=export_sentences_from_sqlite(),
+            data=export_sentences(),
             file_name=f'sentences_{datetime.today().strftime("%Y%m%d")}.csv',
             mime='text/csv'
         )
 
         st.download_button(
             label="단어 CSV로 다운로드",
-            data=export_words_from_sqlite(),
+            data=export_words(),
             file_name=f'words_{datetime.today().strftime("%Y%m%d")}.csv',
             mime='text/csv'
         )
+
+        uploaded_sentence_file = st.file_uploader("패턴문장 CSV 업로드", type=["csv"])
+        if uploaded_sentence_file is not None:
+            import_sentences_from_csv(uploaded_sentence_file)
+            st.success("문장이 업로드되었습니다!")
+
+        uploaded_word_file = st.file_uploader("단어 CSV 업로드", type=["csv"])
+        if uploaded_word_file is not None:
+            import_words_from_csv(uploaded_word_file)
+            st.success("단어가 업로드되었습니다!")
