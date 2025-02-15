@@ -24,7 +24,7 @@ def random_sentence_quiz():
     korean_sentence = quiz[1]
     correct_english = quiz[2]
 
-    st.write(f"한국어 문장: {korean_sentence}")
+    st.subheader(f"한국어 문장: {korean_sentence}")
     st.text_input("영문장을 입력하세요:", key='sentence_input')
     def random_sentence_quiz_reset():
         del st.session_state.sentence_quiz
@@ -32,7 +32,7 @@ def random_sentence_quiz():
 
     st.button("다시하기", key='sentence_retry', on_click=random_sentence_quiz_reset)
     if st.button("정답 확인", key='sentence_check'):
-        st.success(f"""\n
+        st.subheader(f"""\n
             😊 정답=> {correct_english} \n
             🤔 입력=> {st.session_state.sentence_input}
         """)
@@ -57,7 +57,7 @@ def random_word_quiz():
     quiz = st.session_state.word_quiz
     word = quiz[1]
     correct_meaning = quiz[2]
-    st.write(f"단어: {correct_meaning}")
+    st.subheader(f"단어: {correct_meaning}")
     st.text_input("영단어을 입력하세요:", key="word_input")
 
     def random_word_quiz_reset():
@@ -65,7 +65,7 @@ def random_word_quiz():
         st.session_state['word_input'] = ''
     st.button("다시하기", key='word_retry', on_click=random_word_quiz_reset)
     if st.button("정답 확인", key='word_check'):
-        st.success(f"""\n
+        st.subheader(f"""\n
             😊 정답=> {word} \n
             🤔 입력=> {st.session_state.word_input}
         """)
