@@ -4,9 +4,11 @@ import pandas as pd
 import csv
 
 MONGO_URI="mongodb+srv://superiorgon:Im0FatwK52VzLW8q@cluster0.m81lk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+CLIENT_CHILDREN="english_learning_for_children"
+
 # MongoDB Atlas 연결
 client = MongoClient(MONGO_URI)
-db = client["english_learning"]
+db = client[CLIENT_CHILDREN]
 
 db_type="mongodb"
 # DB 초기화 함수
@@ -20,7 +22,6 @@ def init_db():
     if "words" not in db.list_collection_names():
         db.create_collection("words")
     words_col = db["words"]
-
     print("Database initialized.")
 
 

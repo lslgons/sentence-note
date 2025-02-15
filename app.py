@@ -5,6 +5,7 @@ import pandas as pd
 from data_mongodb3 import *
 
 
+
 # 문장 랜덤 퀴즈 함수
 def random_sentence_quiz():
     sentences = get_sentences()
@@ -25,18 +26,18 @@ def random_sentence_quiz():
 
     st.write(f"한국어 문장: {korean_sentence}")
     st.text_input("영문장을 입력하세요:", key='sentence_input')
+    def random_sentence_quiz_reset():
+        del st.session_state.sentence_quiz
+        st.session_state['sentence_input'] = ''
 
+    st.button("다시하기", key='sentence_retry', on_click=random_sentence_quiz_reset)
     if st.button("정답 확인", key='sentence_check'):
         st.success(f"""\n
             😊 정답=> {correct_english} \n
             🤔 입력=> {st.session_state.sentence_input}
         """)
 
-    def random_sentence_quiz_reset():
-        del st.session_state.sentence_quiz
-        st.session_state['sentence_input'] = ''
 
-    st.button("다시하기", key='sentence_retry', on_click=random_sentence_quiz_reset)
 
 
 
@@ -61,12 +62,16 @@ def random_word_quiz():
     def random_word_quiz_reset():
         del st.session_state.word_quiz
         st.session_state['word_input'] = ''
+    st.button("다시하기", key='word_retry', on_click=random_word_quiz_reset)
     if st.button("정답 확인", key='word_check'):
         st.success(f"""\n
             😊 정답=> {correct_meaning} \n
             🤔 입력=> {st.session_state.word_input}
         """)
-    st.button("다시하기", key='word_retry', on_click=random_word_quiz_reset)
+
+
+
+st.set_page_config(page_title="패턴문장/단어 암기장", layout="wide")
 
 init_db()
 
