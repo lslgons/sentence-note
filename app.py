@@ -42,6 +42,7 @@ def random_sentence_quiz():
 
 
 # 단어 랜덤 퀴즈 함수
+#  애들용은 한글 -> 영어 반대로...
 def random_word_quiz():
     words = get_words()
     if not words:
@@ -56,8 +57,8 @@ def random_word_quiz():
     quiz = st.session_state.word_quiz
     word = quiz[1]
     correct_meaning = quiz[2]
-    st.write(f"영단어: {word}")
-    st.text_input("뜻을 입력하세요:", key="word_input")
+    st.write(f"단어: {correct_meaning}")
+    st.text_input("영단어을 입력하세요:", key="word_input")
 
     def random_word_quiz_reset():
         del st.session_state.word_quiz
@@ -65,7 +66,7 @@ def random_word_quiz():
     st.button("다시하기", key='word_retry', on_click=random_word_quiz_reset)
     if st.button("정답 확인", key='word_check'):
         st.success(f"""\n
-            😊 정답=> {correct_meaning} \n
+            😊 정답=> {word} \n
             🤔 입력=> {st.session_state.word_input}
         """)
 
